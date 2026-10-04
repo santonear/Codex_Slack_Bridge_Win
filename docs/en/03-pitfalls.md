@@ -2,8 +2,6 @@
 
 [中文版](../zh/03-pitfalls.md) · [Source index](05-references.md)
 
-External sources explain mechanisms; local logs and artifacts establish whether a test succeeded. MDN and Microsoft encoding/path guidance were added during this documentation run. They are not presented as articles read during the original failures.
-
 ## 1. Results that are easy to misread
 
 | Problem | Analysis | Resolution | Reference |

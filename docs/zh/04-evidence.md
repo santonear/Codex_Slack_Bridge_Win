@@ -2,14 +2,11 @@
 
 [English](../en/04-evidence.md)
 
-整理文档时只读取了历史记录，未重启生产 bridge、发送新的 Slack 测试或调用真实模型。
-
-## 1. 整理时核对的内容
+## 1. 部署核验
 
 | 项目 | 观察结果 | 证明范围 |
 |---|---|---|
-| `<DOCS_REPO_DIR>` 权限 | 随机临时文件创建/写入/读取一致/删除后不存在，全部 PASS | 当前会话在该目录可完成这些操作，不代表其他目录也可写 |
-| 原聊天日志 | 按消息读取指定 ID 的本地 JSONL，含队列投递及AGENT3回复 | 原聊天上下文已找回；原始记录未上传 |
+| 原聊天日志 | 按消息读取指定 ID 的本地 JSONL，含队列投递及AGENT3回复 | 队列投递与回复可核对；原始记录未上传 |
 | bridge package.json | 0.2.0；Codex CLI/SDK 0.160.0；Bolt 5.1.0 | 安装文件版本，不代表服务当前健康 |
 | work-role-route.mjs | AGENT3/AGENT1/AGENT2 固定 ID 与名称、claim、queue、状态校验存在 | 安装源码行为；本轮未主动投递 |
 | work-role-transport.mjs | 只允许 initialize/read/queue list/add；实验能力 opt-in；按当前用户定位 daemon/socket | 当前安装传输范围 |
@@ -34,7 +31,7 @@
 
 ## 3. 仍待完成
 
-- ChatGPT Web：本次尝试未能成功连接，不属于本次 Codex/Slack 经验的重点。
+- ChatGPT Web：连接尝试未成功。
 - 真实重启后登录、原聊天在线、Slack 往返和通知验收。
 - 新电脑原聊天/认证/状态迁移与重新绑定、手机重新配对及重启验收。
 - Executor 真实模型修改与业务验收；原有安全边界下需独立授权和验证。
@@ -61,4 +58,4 @@
 - [Codex App Server](https://learn.chatgpt.com/docs/app-server)：read/resume、审批、线程状态和权限配置依据。
 - [Remote connections](https://learn.chatgpt.com/docs/remote-connections)：手机与桌面账户、主机在线及审批入口依据。
 
-以上页面本轮已访问。公开 App Server 页面没有检索到 `thread/queue/add`；队列方法、请求字段、Windows proxy 握手与状态轮询细节来自部署版源码/schema 和本次历史实测，不能据此保证其他版本也支持同样的公开 API。
+公开 App Server 页面没有检索到 `thread/queue/add`；队列方法、请求字段、Windows proxy 握手与状态轮询细节来自部署版源码/schema 和本次历史实测，不能据此保证其他版本也支持同样的公开 API。

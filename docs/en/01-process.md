@@ -35,11 +35,9 @@ Socket Mode establishes an outbound WebSocket connection, so this design needs n
 | Approval/completion notifications | Hooks and a separate worker | No approval decision is returned | Outbound notifications do not prove inbound control |
 | Controlled execution | Host validates structured edits | Exact file scope; dedicated worktree | Offline execution is not live-model or business acceptance |
 
-This attempt did not successfully connect the original ChatGPT Web chat. This handbook focuses on Codex and Slack.
+This attempt did not successfully connect the original ChatGPT Web chat.
 
 ## 3. How the solution developed
-
-The following phases follow the attempts recorded in the source chat and installation files.
 
 ### Phase 1: Read-only collaboration and controlled execution
 
@@ -95,7 +93,7 @@ The ChatGPT Web connection attempt was unsuccessful and is not expanded here.
 
 An initial AGENT3 greeting sent through the Slack connector only proved outbound messaging. The actual AGENT3 queue route was then added. Installation first copied old offline-test temporary data, reaching a 262-character path. Copying only formal test files fixed the installer.
 
-Subsequently, the original AGENT3 chat received a `SlackDelivery-…` message and replied. This run also read the stored `TURN_COMPLETED` record with a reply. This verifies communication, not business results.
+Subsequently, the original AGENT3 chat received a `SlackDelivery-…` message and replied. The stored record also contains `TURN_COMPLETED` and the reply. This verifies communication, not business results.
 
 ## 4. Anonymized binding template
 

@@ -2,9 +2,7 @@
 
 [中文版](../zh/05-references.md)
 
-These sources explain how the components work. Logs, code and actual tests show whether a fix succeeded. References from the original chat and those added while preparing the documents are listed separately.
-
-## References from the original chat, checked again
+## Interfaces, approvals and deployment
 
 | Source | Analysis supported | Attempt / scope |
 |---|---|---|
@@ -17,7 +15,7 @@ These sources explain how the components work. Logs, code and actual tests show 
 | [Microsoft Run/RunOnce](https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys) | User-login startup | Registration is not actual reboot acceptance |
 | [Third-party Desktop Commander setup](https://github.com/desktop-commander/remote-desktop-commander/blob/main/docs/SETUP.md) | Optional historical maintenance service | Not required by the original-thread queue; cited in old ops guidance |
 
-## References added while preparing the documents
+## Transport, encoding and paths
 
 | Source | Content used | Related problem |
 |---|---|---|
@@ -26,8 +24,6 @@ These sources explain how the components work. Logs, code and actual tests show 
 | [MDN WebSocket servers](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers) | Upgrade/101/accept header, frames, ping/pong | Why raw JSON before handshake failed; frame processing |
 | [Microsoft character encoding](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding) | Windows PowerShell versus modern UTF-8/BOM behavior | Chinese scripts, JSON decoding, BOM tolerance |
 | [Microsoft Windows paths](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file) | Namespaces, extended paths, length | Prefix containment false rejection and temporary-tree copying |
-
-MDN was checked while preparing these documents. The original records did not cite Stack Overflow, so it is not listed as a source used at the time. Follow the links for the full text.
 
 ## Checks the references cannot replace
 

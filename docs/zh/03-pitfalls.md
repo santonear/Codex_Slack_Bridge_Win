@@ -2,8 +2,6 @@
 
 [English](../en/03-pitfalls.md)
 
-这里记录遇到的问题、分析和处理尝试。测试结果依据原日志和产物，外部资料用于解释机制。MDN 和微软编码、路径文档是在整理时补充查阅的；其他来源见[资料索引](05-references.md)。
-
 ## 1. 容易误判的结果
 
 | 失败或误解 | 已知原因 / 证据边界 | 正确做法 | 机制资料 |
@@ -32,7 +30,7 @@
 
 官方当前 App Server 文档说明了 read/resume、权限配置与 paginated 的限制，但不能替代部署版 schema，更不能反推历史错误只有一个原因。[官方协议说明](https://learn.chatgpt.com/docs/app-server)
 
-协议分析依据：[线程读取与恢复](https://learn.chatgpt.com/docs/app-server#read-a-stored-thread-without-resuming)、[权限配置](https://learn.chatgpt.com/docs/app-server#start-or-resume-a-thread)。main 分支源码只作本轮补充参考；历史请求必须以 0.160.0 schema 为准。
+协议分析依据：[线程读取与恢复](https://learn.chatgpt.com/docs/app-server#read-a-stored-thread-without-resuming)、[权限配置](https://learn.chatgpt.com/docs/app-server#start-or-resume-a-thread)。main 分支源码仅供参考；历史请求必须以 0.160.0 schema 为准。
 
 ## 3. 独立测试聊天与桌面显示
 

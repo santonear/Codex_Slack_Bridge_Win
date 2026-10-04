@@ -2,14 +2,11 @@
 
 [中文版](../zh/04-evidence.md)
 
-While preparing these documents, we read the historical records without restarting the production bridge, sending a new Slack test or calling a live model.
-
-## 1. Checks made while preparing the documents
+## 1. Deployment checks
 
 | Item | Observation | What it establishes |
 |---|---|---|
-| Documentation directory permissions | Unique temporary file created/written/read consistently/deleted; PASS | These operations work for this chat in this directory, not all paths |
-| Source chat log | Read the specified local JSONL messages, including queue delivery and AGENT3 response | Original context recovered; raw history not published |
+| Source chat log | Read the specified local JSONL messages, including queue delivery and AGENT3 response | Queue delivery and reply can be cross-checked; raw history not published |
 | Bridge package | Version 0.2.0; Codex CLI/SDK 0.160.0; Bolt 5.1.0 | Installed files, not current service health |
 | Role source | Three fixed identities, claim, queue, stable state checks | Installed behavior; no new submission |
 | Transport source | initialize/read/list/add allowlist, experimental opt-in, current-user paths | Installed transport scope |
@@ -34,7 +31,7 @@ AGENT3 has a saved completion record. The same original chat actually received a
 
 ## 3. Outstanding work
 
-- ChatGPT Web: the connection attempt was unsuccessful; outside this Codex/Slack handbook's main scope.
+- ChatGPT Web: the connection attempt was unsuccessful.
 - Actual reboot, login, original writer availability, Slack round trip, and notification acceptance.
 - New-machine history/authentication/state migration, rebinding, mobile pairing, and reboot acceptance.
 - Live-model executor edits and business acceptance, under separately verified authorization.
@@ -59,4 +56,4 @@ Read old titles and versions alongside later tests. If the source and this guide
 
 [Slack Socket Mode](https://docs.slack.dev/apis/events-api/using-socket-mode/) explains transport and app tokens. [App Server](https://learn.chatgpt.com/docs/app-server) explains thread read/resume, approvals, status, and permissions. [Remote](https://learn.chatgpt.com/docs/remote-connections) explains account/host and mobile access.
 
-These pages were opened in this run. The public App Server page did not reveal thread/queue/add. Queue fields, Windows proxy handshake, and polling details are based on deployed source/schema and historical testing, not a stable cross-version public API promise.
+The public App Server page did not reveal thread/queue/add. Queue fields, Windows proxy handshake, and polling details are based on deployed source/schema and historical testing, not a stable cross-version public API promise.

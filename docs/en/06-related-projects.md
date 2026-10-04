@@ -6,7 +6,7 @@
 
 Several published projects already connect Slack to local Codex. Others provide notifications, additional messaging platforms or broader workflows.
 
-Research used public search plus domain-restricted GitHub, GitLab, Gitee, Codeberg, and Bitbucket queries. READMEs, project documentation, and selected source files were opened. No third-party project was installed, executed, or fully audited. Their capabilities below are documented claims, not local verification.
+The comparison is based on project READMEs, documentation and selected source files. These projects have not been tested locally or fully audited.
 
 The comparisons primarily describe the historical deployment. This repository now also provides a Windows runtime and bilingual setup wizard. The historical mobile approval notifier and separate executor are not included in this version. Similar features do not imply the same deployment or verification scope.
 

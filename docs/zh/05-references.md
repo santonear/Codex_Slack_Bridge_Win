@@ -2,9 +2,7 @@
 
 [English](../en/05-references.md)
 
-链接用于解释机制，测试是否成功仍看日志、源码和实际结果。下面将原聊天引用的资料与整理时补充查阅的资料分开列出。
-
-## 原聊天引用的资料，整理时已重新查阅
+## 接口、审批与部署
 
 | 来源与内容链接 | 用于分析什么 | 采取的尝试 / 适用范围 |
 |---|---|---|
@@ -17,7 +15,7 @@
 | [微软 Run/RunOnce](https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys) | Windows 用户登录启动 | 核对 HKCU 启动登记；登记通过不算真实重启验收 |
 | [第三方项目 Desktop Commander 设置](https://github.com/desktop-commander/remote-desktop-commander/blob/main/docs/SETUP.md) | 旧方案的远程维护部署 | 仅为可选维护通道，不是 Slack 原聊天队列必需依赖；历史 ops 文档含此引用 |
 
-## 整理时补充查阅的资料
+## 传输、编码与路径
 
 | 来源与内容链接 | 内容要点 | 对应问题 |
 |---|---|---|
@@ -27,11 +25,9 @@
 | [微软 PowerShell 字符编码](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding) | Windows PowerShell 和现代 PowerShell 的 UTF-8/BOM 行为差异 | 中文 .ps1 解析、Get-Content UTF8、Node JSON BOM 兼容 |
 | [微软 Windows 文件路径](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file) | 路径命名空间、扩展路径前缀与长度 | `\\?\` 范围误判、复制临时测试长路径失败 |
 
-整理时查阅了 MDN。原记录没有引用 Stack Overflow 等社区帖子，因此这里不将它们列为当时的参考资料。完整内容见链接。
-
 ## 仍需实际检查的问题
 
 - `paginated`、参数拼写和 active writer 是不同条件，不能用一段通用文档替所有 RPC 错误定性。
-- 原聊天队列在历史测试中成功，不能保证别的版本、机器或ChatGPT Web 聊天有相同接口。
+- 原聊天队列在历史测试中成功，不能保证别的版本、机器或 ChatGPT Web 聊天有相同接口。
 - UNKNOWN/FAILED 可能在执行、读取或反馈任一层发生；状态 JSON、marker 和原回合需要共同核验。
 - 测试统计、hash 备份、worktree 未变化和安装成功都属于项目证据，外部知识库不能替它们出具验收。
