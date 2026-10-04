@@ -4,7 +4,7 @@
 
 ## 1. 检索范围和结论
 
-找到四个直接相关的 Slack bridge，以及三个提供通知、其他聊天平台连接或工作流的项目。Slack → 本地 Codex 已有公开实现。
+Slack → 本地 Codex 已有多个公开实现，也有提供通知、其他消息平台和工作流的相关项目。
 
 检索了公开网络索引和 GitHub、GitLab、Gitee、Codeberg、Bitbucket，阅读了项目 README、文档和部分源码。没有安装或运行这些项目，也未做完整安全审计。下面的功能说明来自项目文档。
 
@@ -20,6 +20,19 @@
 | [josephbartlett/codex-relay](https://github.com/josephbartlett/codex-relay) | Slack 发布任务、只读规划、明确批准、worktree 隔离、审计、状态反馈 | 当前执行适配器是 `codex exec --json`；批准后 workspace-write，并提供 PR/可选邮件流程。本项目 Executor 采用结构化修改由宿主校验落盘；原聊天队列又是另一条路线。该项目不把任意正在运行终端的接管列为当前已完成能力 |
 
 源文件抽查：[codex-slack Agent 接口](https://github.com/earonesty/codex-slack/blob/main/src/agent.ts) 定义 create/resume/input/response 等能力；[Relay ExecAdapter](https://github.com/josephbartlett/codex-relay/blob/main/apps/orchestrator/src/runner/ExecAdapter.ts) 通过子进程运行 Codex，使用显式 workspace 和环境变量允许列表。抽查不能代替全仓库审计。
+
+### 与当前运行程序直接比较
+
+本版采用 Windows 原桌面聊天队列、固定 AGENT 绑定、中英浏览器向导和持久化投递记录。下面这些项目也已公开代码，功能有交集，运行方式并不相同。
+
+| 项目与来源 | 相同点 | 与本版的区别 |
+|---|---|---|
+| [hyungchulc/codex-debug-bridge](https://github.com/hyungchulc/codex-debug-bridge) | 消息进入已有 Codex App 任务、匹配结果回传、固定身份和会话、保留审批约束 | 使用 macOS Codex App 的 Chromium 调试接口，Slack 经 HTTP webhook，需要 HTTPS 回调；还包含私人指令文件和记忆路由。本版使用 Windows app-server queue 与 Socket Mode，不安装这些组件 |
+| [panzhang83/codex-slack](https://github.com/panzhang83/codex-slack) | Socket Mode、用户限制、已有会话绑定、观察对话和最终回复 | Python SDK 区分 observe/control；接管后 resume 会话，支持附件和交互输入。本版投递到原桌面队列，由原连接执行，不接管回合 |
+| [shekit/openbridge](https://github.com/shekit/openbridge) | Slack 控制本地 Codex、频道和会话映射、配置向导 | 支持 Claude Code/Codex CLI、Discord、项目切换和定时任务，可在笔记本或 VPS 运行。本版只面向 Windows 上已有 Codex 桌面聊天，使用本地浏览器配置 |
+| [nordbyte/nordrelay](https://github.com/nordbyte/nordrelay) | Codex/Slack 连接、本地 WebUI、队列和访问限制 | 提供多后端、多消息平台、用户/群组权限、文件/语音和多主机控制。本版只配置一个 Slack 工作区及频道；未在其 README 中核实与本版相同的 Windows 原桌面队列路线 |
+
+这些对照来自各项目公开说明，没有安装验证。不能把“未说明同一路线”写成“不支持”，也不能据此判断本方案独有。
 
 ## 3. 相关项目
 
