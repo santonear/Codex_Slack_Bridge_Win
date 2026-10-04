@@ -1,5 +1,7 @@
 # 证据、版本与待验收事项
 
+[English](en/04-evidence.md)
+
 整理日期：2026-10-05，时区 Asia/Shanghai。本轮是只读恢复历史并创建文档库，没有重启生产 bridge，没有发送新的 Slack 测试或调用真实模型。
 
 ## 1. 本轮直接核对
@@ -40,7 +42,7 @@ AGENT3状态时间为 `2026-10-04T17:19:08.760Z`，即北京时间 2026-10-05 01
 
 ## 4. 可定位的本地来源
 
-以下是旧机证据路径，其他机器不保证存在。原聊天 JSONL、凭据、状态正文、历史备份、候选 zip 均未加入仓库。
+以下是为公开发布而匿名化的旧机证据路径模板，需替换 USERPROFILE/PROJECTS/ID 等占位符。原聊天 JSONL、凭据、状态正文、历史备份、候选 zip 均未加入仓库。
 
 - 原日志：`<USERPROFILE>/.codex/sessions/<date>/rollout-<timestamp>-<SOURCE_CHAT_ID>.jsonl`。
 - bridge：`D:/Project/PROJECTS/fitness-slack-bridge/fitness-slack-bridge`。

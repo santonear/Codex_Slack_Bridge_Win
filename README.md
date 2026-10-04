@@ -1,5 +1,9 @@
 # Codex_Slack_Bridge
 
+**[English](#english) | [中文](#中文)**
+
+## 中文
+
 Slack → Windows 本地 Codex bridge 的设计复盘、部署步骤和避坑手册。
 
 文档整理日期：2026-10-05（北京时间）。来源：原聊天 `THREAD_ID_AGENT3`、现有 bridge 源码和安装记录。
@@ -11,6 +15,7 @@ Slack → Windows 本地 Codex bridge 的设计复盘、部署步骤和避坑手
 3. [避坑：失败尝试、原因、处理和排障顺序](docs/03-pitfalls.md)
 4. [证据范围与待完成事项](docs/04-evidence.md)
 5. [官方文档与第三方知识库索引](docs/05-references.md)
+6. [公开类似项目及功能比较](docs/06-related-projects.md)
 
 角色名称已匿名化为 AGENT1/AGENT2/AGENT3；部署命令为模板，需映射到自己的实际配置。
 
@@ -28,3 +33,22 @@ Slack → Windows 本地 Codex bridge 的设计复盘、部署步骤和避坑手
 - 用户登录后的自启动登记和检查曾通过，真正重启后的通信验收尚未完成；新电脑迁移也未实测。
 
 本仓库仅保存整理后的 Markdown 文档，不包含运行中的 bridge 源码、密钥、认证数据、原始聊天历史或一键安装程序。部署说明需与旧机器上的实际源码和安装产物配合使用。旧说明中“尚未接入”的结论必须结合时间阅读，不能覆盖后来的队列路由成功结论。
+
+## English
+
+A bilingual record of the Slack → Windows local Codex bridge: design, setup, operation, failure analysis, and evidence. Prepared on 2026-10-05, Asia/Shanghai.
+
+1. [Complete process and architecture](docs/en/01-process.md)
+2. [Setup, daily use, reboot, and migration](docs/en/02-runbook.md)
+3. [Pitfalls: problems, analysis, and resolution attempts](docs/en/03-pitfalls.md)
+4. [Evidence and outstanding acceptance](docs/en/04-evidence.md)
+5. [Official documentation and third-party references](docs/en/05-references.md)
+6. [Public related projects and comparison](docs/en/06-related-projects.md)
+
+Roles and thread IDs are anonymized as AGENT1/AGENT2/AGENT3 and THREAD_ID_AGENTn. Command examples are templates; map them to your actual deployment.
+
+Historical tests verified submissions into the original Codex chats, original-chat responses, and approval reminders followed by mobile approval and Slack summaries. Bridge-owned read-only collaboration and the offline controlled executor are separate capabilities.
+
+The original ChatGPT connection attempt was unsuccessful. Direct Slack permission approval remained an uninstalled candidate. Actual reboot recovery and new-machine migration remain untested.
+
+This public repository contains documentation only. It does not publish bridge runtime source, credentials, authentication data, raw conversations, or a one-click installer. Read historical “not connected” conclusions in chronological context; later original-thread queue tests changed that outcome.

@@ -1,10 +1,12 @@
 # 操作手册：部署、使用、重启与迁移
 
+[English](en/02-runbook.md)
+
 全文采用 AGENT1/AGENT2/AGENT3 作为角色代号，THREAD_ID_AGENTn 作为原聊天 ID 占位符。Slack 指令是匿名化模板：现有旧机 parser 仍使用部署时的自定义 alias，直接照发 AGENTn 不会自动识别。使用时将模板代号映射到自己的配置；新部署需同步核对 parser、角色映射和 transport 允许列表。本文不修改运行中的 alias。
 
 ## 1. 先确认部署对象
 
-这份仓库是文档库。以下安装流程需要旧机已有的 bridge 源码及安装产物；从本仓库 clone 下来的文档不能直接 `npm start`。旧机实际 bridge 路径为：
+这份仓库是文档库。以下安装流程需要旧机已有的 bridge 源码及安装产物；从本仓库 clone 下来的文档不能直接 `npm start`。旧机 bridge 路径的匿名化模板为（请替换 PROJECTS）：
 
 ```text
 D:\Project\PROJECTS\fitness-slack-bridge\fitness-slack-bridge

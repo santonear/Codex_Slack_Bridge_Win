@@ -1,5 +1,7 @@
 # 避坑与排障：失败尝试留下的规则
 
+[English](en/03-pitfalls.md)
+
 以下采用“问题 → 分析 → 尝试解决”的顺序。资料列链接到具体内容；历史实测以原日志和产物为证据，外部资料解释机制，不替代本机验证。MDN 和微软编码/路径页为本轮补充核验；其余来源的使用范围见[资料索引](05-references.md)。
 
 ## 1. 能力和验收误判
@@ -46,8 +48,8 @@
 
 | 症状 | 实际原因 | 处理 | 机制资料 |
 |---|---|---|---|
-| npm.ps1 被执行策略拦截 | PowerShell 默认解析到 .ps1 | 使用 npm.cmd；不放宽全局策略 | [PowerShell 编码](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding) |
-| PS 出现 `>>` | 通常是引号/括号未闭合而等待续行 | Ctrl+C 回正常提示符，再执行一条完整命令 | [App Server](https://learn.chatgpt.com/docs/app-server) |
+| npm.ps1 被执行策略拦截 | PowerShell 默认解析到 .ps1 | 使用 npm.cmd；不放宽全局策略 | [PowerShell 执行策略](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies) |
+| PS 出现 `>>` | 通常是引号/括号未闭合而等待续行 | Ctrl+C 回正常提示符，再执行一条完整命令 | [PowerShell 解析](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing) |
 | 旧会话能读 D:\Project\SelfbuildBot 但不能写 | Codex 沙箱未将目录列为 writable root | 在该目录开新聊天并实测；不能靠改 NTFS ACL 解除 | [Codex 权限边界](https://learn.chatgpt.com/docs/app-server#approvals) |
 | 119/120，EXEC_PROJECT_CONFIG | 用户目录上级 Codex 配置影响隔离测试 | 移验证副本到独立目录，不跳过安全检查 | [Codex 权限边界](https://learn.chatgpt.com/docs/app-server#approvals) |
 | PowerShell 中文脚本解析失败 | Windows PowerShell 读取无 BOM UTF-8 的兼容问题 | 对含中文 .ps1 用兼容编码，并用 powershell.exe 实测解析 | [PowerShell 编码](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding) |
