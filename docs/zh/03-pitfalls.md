@@ -87,7 +87,7 @@
 1. **输入层**：真正 @机器人了吗？频道是否已加 App？是否一条消息一个角色？
 2. **Slack 接收层**：token 类型、scope、Socket Mode、事件订阅和白名单是否正确？
 3. **进程层**：实际运行目录和安装 hash 是否对应最新路由？是否重复消费者？
-4. **身份层**：固定 ID + 名称是否匹配？target 是 Codex 还是普通 ChatGPT？
+4. **身份层**：固定 ID + 名称是否匹配？target 是 Codex 还是ChatGPT Web？
 5. **控制层**：daemon/socket、WebSocket 握手、experimentalApi 是否正常？
 6. **队列层**：是否已有消息、旧未确认任务、配额限制？入队 ack 和 marker 是否保存？
 7. **执行层**：原聊天是否在线，等待批准、回合中断还是最终回复未就绪？

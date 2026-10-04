@@ -18,7 +18,7 @@ Less chair time, more life time. This human was made to roam—not to become a d
 
 投递前保存记录。结果不确定时阻止新任务，不自动重投；回传失败可以查询状态并补发回复。桌面聊天的权限和审批继续生效。
 
-本版不包含自启动、手机审批通知组件或独立执行器。真实 Slack 往返、重启恢复及新电脑配置仍需实测。本次尝试未能成功与 ChatGPT 连接。
+本版不包含自启动、手机审批通知组件或独立执行器。真实 Slack 往返、重启恢复及新电脑配置仍需实测。本次尝试未能成功与 ChatGPT Web 连接。
 
 ### 经验与手册
 
@@ -47,7 +47,7 @@ Socket Mode needs no public server. Requests are restricted to the configured wo
 
 Delivery records are saved before submission. Uncertain results block new tasks and are never automatically resubmitted. Failed feedback can be queried and retried. The desktop chat keeps its existing permissions and approvals.
 
-This version includes no automatic startup, mobile approval notifier or independent executor. A live Slack round trip, reboot recovery and setup on another computer still need testing. The ChatGPT connection attempt was unsuccessful.
+This version includes no automatic startup, mobile approval notifier or independent executor. A live Slack round trip, reboot recovery and setup on another computer still need testing. The ChatGPT Web connection attempt was unsuccessful.
 
 ### Experience and manuals
 

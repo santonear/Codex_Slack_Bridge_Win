@@ -75,7 +75,7 @@ MAX_TURNS_PER_DAY=30
 
 历史安装产物位于旧聊天输出的 `desktop-agent-routing`。其中有阶段性候选和测试快照，应选择最终对应版本，不能将全部文件递归复制进生产。
 
-1. **备份与核对**：获取目标原聊天 ID 和名称；备份历史、配置、hooks，记录业务 Git 状态。先确认属于 Codex，普通 ChatGPT 另行处理。
+1. **备份与核对**：获取目标原聊天 ID 和名称；备份历史、配置、hooks，记录业务 Git 状态。先确认属于 Codex，ChatGPT Web 另行处理。
 2. **只读探针**：连接 daemon proxy，完成 WebSocket Upgrade；initialize 声明 `capabilities.experimentalApi:true`；只用 `thread/read` 和 `thread/queue/list` 检查身份与队列。
 3. **隔离测试**：由桌面创建独立测试聊天，只发送无工具固定回复任务。记录一次性标识，确认原聊天显示消息且回复；不要用原业务 Agent 调试协议。
 4. **Slack 测试路由**：安装前完整离线测试、校验基线 hash、备份，失败即停止。先验证“已排队”，再验证最终回复、零工具调用和原历史保留。

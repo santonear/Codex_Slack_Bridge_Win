@@ -34,7 +34,7 @@ AGENT3 has a saved completion record. The same original chat actually received a
 
 ## 3. Outstanding work
 
-- ChatGPT: the connection attempt was unsuccessful; outside this Codex/Slack handbook's main scope.
+- ChatGPT Web: the connection attempt was unsuccessful; outside this Codex/Slack handbook's main scope.
 - Actual reboot, login, original writer availability, Slack round trip, and notification acceptance.
 - New-machine history/authentication/state migration, rebinding, mobile pairing, and reboot acceptance.
 - Live-model executor edits and business acceptance, under separately verified authorization.

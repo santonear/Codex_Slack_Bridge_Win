@@ -30,7 +30,7 @@ External sources explain mechanisms; local logs and artifacts establish whether 
 | Switching chats did not release the writer | UI navigation did not release ownership | Stop resume attempts; unsubscribe releases only the caller's subscription | [App Server](https://learn.chatgpt.com/docs/app-server) |
 | Queue read required experimentalApi | Connection did not opt in | Set capability on this connection only | [Official queue tests](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs) |
 
-ChatGPT scope: the attempt to connect the original ChatGPT chat was unsuccessful.
+The attempt to connect the original ChatGPT Web chat was unsuccessful.
 
 ## 3. Independent test threads and desktop visibility
 

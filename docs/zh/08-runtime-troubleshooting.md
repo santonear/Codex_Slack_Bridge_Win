@@ -20,4 +20,4 @@
 
 握手与协议帧的第三方说明见 [MDN WebSocket 服务器](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers)。资料解释机制，具体结果见测试报告。
 
-首版不安装历史手册中的审批通知 worker、手机审批通知或独立受控执行器。原聊天仍可按自身配置请求批准。ChatGPT 在原尝试中未连接成功，本程序只连接 Codex。
+首版不安装历史手册中的审批通知 worker、手机审批通知或独立受控执行器。原聊天仍可按自身配置请求批准。ChatGPT Web 在原尝试中未连接成功，本程序只连接 Codex。

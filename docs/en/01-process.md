@@ -35,7 +35,7 @@ Socket Mode establishes an outbound WebSocket connection, so this design needs n
 | Approval/completion notifications | Hooks and a separate worker | No approval decision is returned | Outbound notifications do not prove inbound control |
 | Controlled execution | Host validates structured edits | Exact file scope; dedicated worktree | Offline execution is not live-model or business acceptance |
 
-ChatGPT scope: this attempt did not successfully connect the original ChatGPT chat. This handbook focuses on Codex and Slack.
+This attempt did not successfully connect the original ChatGPT Web chat. This handbook focuses on Codex and Slack.
 
 ## 3. How the solution developed
 
@@ -43,7 +43,7 @@ The following phases follow the attempts recorded in the source chat and install
 
 ### Phase 1: Read-only collaboration and controlled execution
 
-The initial bridge used independent product, AGENT2, and AGENT1 roles. A collaboration task made up to three calls in sequence, passing read-only file snapshots and the previous role’s findings to the next role. These were not the desktop's original chats.
+The initial bridge used independent AGENT3, AGENT2, and AGENT1 roles. A collaboration task made up to three calls in sequence, passing read-only file snapshots and the previous role’s findings to the next role. These were not the desktop's original chats.
 
 The source chat began with version 0.1.3. The user then chose controlled file writes: Codex proposes structured edits; the host validates them and writes into a separate executor worktree. The model does not receive arbitrary shell access.
 
@@ -65,7 +65,7 @@ Real approval reminders and turn summaries were observed. A separate desktop tes
 
 The user wanted existing chats rather than newly created role sessions. Three example commands in one Slack message were initially treated as one task. Collaboration answers also came from bridge-owned sessions. The test now had to confirm that the message appeared in the intended original chat, identified by its fixed ID.
 
-AGENT1 and AGENT2 IDs were checked. The third requested product chat belonged to ChatGPT and was not connected. Early route candidates explicitly said “not delivered” rather than silently falling back to independent roles.
+AGENT1 and AGENT2 IDs were checked. The other requested chat was in ChatGPT Web and was not connected. Early route candidates explicitly said “not delivered” rather than silently falling back to independent roles.
 
 ### Phase 4: Control connection and unsuccessful resume attempts
 
@@ -91,7 +91,7 @@ AGENT1 and AGENT2 bindings were verified and backed up. A Windows `\\?\` prefix 
 
 Hardcoded user paths were replaced with current-user daemon/socket discovery. User-login startup was registered and checked; an actual reboot round trip remained untested.
 
-The ChatGPT connection attempt was unsuccessful and is not expanded here.
+The ChatGPT Web connection attempt was unsuccessful and is not expanded here.
 
 An initial AGENT3 greeting sent through the Slack connector only proved outbound messaging. The actual AGENT3 queue route was then added. Installation first copied old offline-test temporary data, reaching a 262-character path. Copying only formal test files fixed the installer.
 

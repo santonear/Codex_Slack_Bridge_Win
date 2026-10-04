@@ -20,4 +20,4 @@
 
 [MDN WebSocket servers](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers) explains the handshake and framing. The test report records actual results.
 
-This release does not install the historical approval worker, mobile notifications or a separate controlled executor. Existing chats retain their approval configuration. The original ChatGPT attempt failed; this runtime connects Codex only.
+This release does not install the historical approval worker, mobile notifications or a separate controlled executor. Existing chats retain their approval configuration. The original ChatGPT Web attempt failed; this runtime connects Codex only.
