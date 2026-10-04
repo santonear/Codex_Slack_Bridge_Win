@@ -1,0 +1,13 @@
+# Local evidence and publishing helpers are never uploaded.
+.local/
+source-chat-notes.json
+.env
+.env.*
+!.env.example
+.codex-home/
+.state/
+node_modules/
+*.sqlite*
+*.log
+*.zip
+backup*/
