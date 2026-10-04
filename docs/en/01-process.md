@@ -90,7 +90,7 @@ I verified and backed up the AGENT1 and AGENT2 bindings. A Windows `\\?\` prefix
 
 I replaced hardcoded user paths with daemon/socket discovery for the current Windows account. I registered and checked login startup, but did not test a round trip after an actual reboot.
 
-I first sent an AGENT3 greeting through the Slack connector, which only proved outbound messaging. I then added the AGENT3 queue route. Installation first copied old offline-test temporary data, reaching a 262-character path. I fixed the installer by copying only formal test files.
+I first sent AGENT3 test information through the Slack connector, which only proved outbound messaging. I then added the AGENT3 queue route. Installation first copied old offline-test temporary data, reaching a 262-character path. I fixed the installer by copying only formal test files.
 
 I then confirmed that the original AGENT3 chat received a `SlackDelivery-…` message and replied. The stored record also contains `TURN_COMPLETED` and the reply. I verified communication, but did not verify business results.
 

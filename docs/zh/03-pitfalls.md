@@ -7,7 +7,7 @@
 | 失败或误解 | 已知原因 / 证据边界 | 正确做法 | 机制资料 |
 |---|---|---|---|
 | 协作输出像正确 Agent，于是认为原聊天接入 | 角色 prompt 相同，实际是 bridge 独立会话 | 同时核对固定 ID、原聊天消息、最终回复和 Slack 回执 | [App Server](https://learn.chatgpt.com/docs/app-server) |
-| AGENT3通过连接器发“你好”，但 @AGENT3 无法投递 | 出站连接器与 bot 入站路由独立 | 单独实现并验收 AGENT3 队列路由 | [官方队列测试源码](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs) |
+| AGENT3 通过连接器发送测试信息，但 @AGENT3 无法投递 | 出站连接器与 bot 入站路由独立 | 单独实现并验收 AGENT3 队列路由 | [官方队列测试源码](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs) |
 | hooks 提醒成功，被当作 Slack 能反向控制 | hooks 只报告事件 | 分开测通知和指令投递 | [hooks 事件](https://learn.chatgpt.com/docs/hooks) |
 | 队列 add 成功就称任务完成 | 队列只确认提交 | 用唯一 marker 查 completed 和 final_answer | [官方队列测试源码](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs) |
 | TURN_COMPLETED 就称功能成功 | 回合完成不等于业务验收 | 查回复、文件、测试等真实交付证据 | [官方队列测试源码](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs) |

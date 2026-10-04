@@ -7,7 +7,7 @@
 | Problem | Analysis | Resolution | Reference |
 |---|---|---|---|
 | Collaboration looked like the expected agents | Role prompts matched, but threads were bridge-owned | Verify fixed original ID, visible message, final reply, and feedback | [App Server](https://learn.chatgpt.com/docs/app-server) |
-| A connector greeting worked, but AGENT3 mentions did not | Outbound connector and inbound bot routing are separate | Add and test the actual queue route | [Slack Socket Mode](https://docs.slack.dev/apis/events-api/using-socket-mode/) |
+| Sending test information through the connector worked, but AGENT3 mentions did not | Outbound connector and inbound bot routing are separate | Add and test the actual queue route | [Slack Socket Mode](https://docs.slack.dev/apis/events-api/using-socket-mode/) |
 | Hook notifications were mistaken for inbound control | Hooks only reported events | Test notifications and submission separately | [Hooks](https://learn.chatgpt.com/docs/hooks) |
 | Queue acknowledgement was called completion | Submission is not execution | Match the unique marker, completed turn, and final answer | [Queue test source](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs) |
 | TURN_COMPLETED was called feature success | A finished turn does not prove business acceptance | Inspect actual deliverables and tests | [App Server lifecycle](https://learn.chatgpt.com/docs/app-server) |

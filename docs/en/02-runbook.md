@@ -103,7 +103,7 @@ The installed status keyword is `状态` (“status”); English `status` is not
 A first communication test can use:
 
 ```text
-@<<Slack bot>> AGENT3: Communication test only. Do not read files, call tools, or change the project. Reply only: AGENT3 original chat connected.
+@<<Slack bot>> AGENT3: Communication test only. Do not read files, call tools, or change the project. Return a short output message.
 ```
 
 One message targets one role. Do not embed another role command inside a task. The legacy collaboration command uses bridge-owned sessions; it does not fan out to all original chats.
