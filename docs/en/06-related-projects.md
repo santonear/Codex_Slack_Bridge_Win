@@ -1,6 +1,6 @@
 # Public Related Projects: Similarities and Differences
 
-[中文版](../06-related-projects.md) · Checked 2026-10-05, Asia/Shanghai.
+[中文版](../zh/06-related-projects.md)
 
 ## 1. Scope and finding
 
@@ -29,26 +29,10 @@ Selected source checks: [Agent contract](https://github.com/earonesty/codex-slac
 | [Wangmerlyn/coding-agent-notifier](https://github.com/Wangmerlyn/coding-agent-notifier) | Hook-triggered Slack completion alerts, Codex integration | Notification component for Slack DMs/Feishu and multiple CLIs, not our inbound task queue. Old Codex-Slack-Notifier URL redirects. [Integration guide](https://github.com/Wangmerlyn/coding-agent-notifier/blob/main/docs/integrations.md) |
 | [Yeachan-Heo/oh-my-codex](https://github.com/Yeachan-Heo/oh-my-codex) | Hooks, Slack notifications, roles, workflow state | Broader CLI workflow layer. [Notifications/reply injection](https://oh-my-codex.dev/docs.html#notifications) describes tmux-based reply injection; native Windows/Codex App is not the recommended default. Different from original desktop app-server queue |
 
-## 4. Platform coverage
+## 4. Our approach and unfinished work
 
-| Platform | Observation | Limit |
-|---|---|---|
-| GitHub | Seven projects and selected sources opened | Alternatives verified to exist; not exhaustive |
-| Gitee | [OMX copy](https://gitee.com/ai-large-model-tool/oh-my-codex/blob/main/README.zh.md?skip_mobile=true) is marked as a fork | Not counted as an independent implementation; may lag upstream |
-| GitLab | Public queries/topic pages exposed Telegram bridge and Slack MCP neighbors | No same-scope independent Slack/original-desktop-queue project verified here; absence not established |
-| Codeberg | robots.txt restricted access | Incomplete coverage |
-| Bitbucket | Public index gave no directly verifiable equivalent | Not a full platform scan |
+On Windows, this bridge submits tasks to fixed original desktop chat IDs through queue/add. The original writer processes them, and the bridge checks the marker, turn and final answer before replying in Slack. Tests also covered a separate hook worker, phone approval and an offline controlled executor. The work included replay prevention and Windows encoding/path fixes. These are recorded results, not evidence that the design is unique.
 
-Some GitHub src directory pages could not be fetched; the two linked raw source files were readable. Other feature comparisons rely on opened project documentation, not search snippets or unofficial mirrors alone.
+Other projects publish runtime code for chat discovery, dynamic binding, interactive approval, attachments, containers or PR delivery. This repository still contains documentation only. Actual reboot recovery, new-machine migration and live-model executor tests remain unfinished.
 
-## 5. Our combination and current gaps
-
-The observed combination is fixed original Windows desktop identity → queue/add → original writer → marker/turn/final-answer validation → Slack feedback, plus separate hook worker, phone approval, controlled executor, no replay, and Windows encoding/path fixes. This is an observed design, not a claim of industry uniqueness.
-
-Other projects publish more complete runnable systems for discovery, dynamic binding, interactive approval, attachments, containers, or PR delivery. This repository remains documentation-only. Actual reboot/new-machine acceptance and live-model executor acceptance are still missing.
-
-Not finding an original-desktop queue route in a project's documentation does not prove that it cannot support one. Replacing the existing installation requires version-specific source review and actual tests.
-
-## 6. Ideas inspected but not implemented
-
-Potential references include attach/detach UI, SQLite journals and uncertain-state recovery, bounded Slack history backfill, neutral session workspaces, audit/worktree/PR workflows, and notification templates. No third-party installation or production change was made. Existing permissions and approval constraints remain the deployment authority.
+If a project does not document an original-desktop queue route, support remains unconfirmed. Check its version and source, then test it before replacing the existing installation.

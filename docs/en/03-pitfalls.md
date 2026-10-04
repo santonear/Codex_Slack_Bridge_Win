@@ -1,10 +1,10 @@
 # Pitfalls: Problem, Analysis, and Attempted Resolution
 
-[中文版](../03-pitfalls.md) · [Source index](05-references.md)
+[中文版](../zh/03-pitfalls.md) · [Source index](05-references.md)
 
 External sources explain mechanisms; local logs and artifacts establish whether a test succeeded. MDN and Microsoft encoding/path guidance were added during this documentation run. They are not presented as articles read during the original failures.
 
-## 1. Capability and acceptance mistakes
+## 1. Results that are easy to misread
 
 | Problem | Analysis | Resolution | Reference |
 |---|---|---|---|
@@ -14,7 +14,6 @@ External sources explain mechanisms; local logs and artifacts establish whether 
 | Queue acknowledgement was called completion | Submission is not execution | Match the unique marker, completed turn, and final answer | [Queue test source](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs) |
 | TURN_COMPLETED was called feature success | A finished turn does not prove business acceptance | Inspect actual deliverables and tests | [App Server lifecycle](https://learn.chatgpt.com/docs/app-server) |
 | Several role commands became one task | Parser handled one message as one role | Separate messages; reject mixed-role bodies | [Slack event transport](https://docs.slack.dev/apis/events-api/using-socket-mode/) |
-| Partial green test output was called installation success | The installer was still running | Require final summary, installation record, and loaded process | [Source/evidence boundary](../04-evidence.md) |
 
 ## 2. Protocol and thread identity
 
@@ -58,9 +57,9 @@ Protocol reference: [thread start/resume/list](https://learn.chatgpt.com/docs/ap
 | Slack returned old help | Patch was absent or not loaded by the consumer | Check install record, hash, and process directory | [Slack transport](https://docs.slack.dev/apis/events-api/using-socket-mode/) |
 | 0.2.0 health check failed | Legacy supervisor recognized only an old version marker | Preserve protocol compatibility while exposing actual version; restore on failure | [Historical evidence](04-evidence.md) |
 
-Syntax validation is not installation validation. A temporary Git test repository's seed/reset output is not evidence that the business repository was reset; verify the actual working directory.
+A syntax check does not confirm installation. If a Git test prints seed/reset output, check its working directory before assuming it changed the business repository.
 
-## 5. Two result-state false alarms
+## 5. Two incorrect result reports
 
 **Fixed desktop test FAILED:** later read-only verification found completed, the expected answer, zero tool calls, and preserved history. Intermediate data were missing, so the exact trigger was not established. Wait logic and saved-state repair were added without sending another task.
 
@@ -79,7 +78,7 @@ Inspect marker, turnId, state, and final_answer. Failure can occur in execution,
 
 References: [App Server approvals](https://learn.chatgpt.com/docs/app-server#approvals), [hook trust](https://learn.chatgpt.com/docs/hooks#review-and-trust-hooks), [mobile Remote](https://learn.chatgpt.com/docs/remote-connections). Host claim/SSE/native-handle details come from project source and offline evidence, not a guarantee in these pages.
 
-## 7. Minimal troubleshooting order
+## 7. Troubleshooting order
 
 1. Input: real mention, bot channel membership, one role per message.
 2. Slack reception: token type, scopes, events, Socket Mode, allowlists.

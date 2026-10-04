@@ -1,10 +1,10 @@
-# References for Analysis and Resolution Attempts
+# Troubleshooting References
 
-[中文版](../05-references.md)
+[中文版](../zh/05-references.md)
 
-External sources explain mechanisms. Local logs, code, and acceptance tests establish success. Historical citations and newly added references are labeled separately; no community article is falsely presented as having been consulted during the original failures.
+These sources explain how the components work. Logs, code and actual tests show whether a fix succeeded. References from the original chat and those added while preparing the documents are listed separately.
 
-## Historically cited and reopened in this run
+## References from the original chat, checked again
 
 | Source | Analysis supported | Attempt / scope |
 |---|---|---|
@@ -17,7 +17,7 @@ External sources explain mechanisms. Local logs, code, and acceptance tests esta
 | [Microsoft Run/RunOnce](https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys) | User-login startup | Registration is not actual reboot acceptance |
 | [Third-party Desktop Commander setup](https://github.com/desktop-commander/remote-desktop-commander/blob/main/docs/SETUP.md) | Optional historical maintenance service | Not required by the original-thread queue; cited in old ops guidance |
 
-## Added and checked during this documentation run
+## References added while preparing the documents
 
 | Source | Content used | Related problem |
 |---|---|---|
@@ -27,9 +27,9 @@ External sources explain mechanisms. Local logs, code, and acceptance tests esta
 | [Microsoft character encoding](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding) | Windows PowerShell versus modern UTF-8/BOM behavior | Chinese scripts, JSON decoding, BOM tolerance |
 | [Microsoft Windows paths](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file) | Namespaces, extended paths, length | Prefix containment false rejection and temporary-tree copying |
 
-MDN is the third-party knowledge base actually opened for this run. There is no evidence that the original attempts cited Stack Overflow, so such a historical citation is not invented. Follow links for the full text; these documents provide brief paraphrases only.
+MDN was checked while preparing these documents. The original records did not cite Stack Overflow, so it is not listed as a source used at the time. Follow the links for the full text.
 
-## What references cannot prove
+## Checks the references cannot replace
 
 - Paginated history, invalid enums, and active-writer ownership are distinct conditions; one generic passage cannot diagnose every RPC rejection.
 - One machine's queue test does not guarantee another version, host, or non-Codex chat exposes the same route.

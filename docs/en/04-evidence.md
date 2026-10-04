@@ -1,10 +1,10 @@
 # Evidence, Versions, and Outstanding Acceptance
 
-[中文版](../04-evidence.md) · Prepared 2026-10-05, Asia/Shanghai.
+[中文版](../zh/04-evidence.md)
 
-This run recovered historical context read-only and created documentation. It did not restart production, send another Slack communication test, or call a live model.
+While preparing these documents, we read the historical records without restarting the production bridge, sending a new Slack test or calling a live model.
 
-## 1. Direct checks in this run
+## 1. Checks made while preparing the documents
 
 | Item | Observation | What it establishes |
 |---|---|---|
@@ -17,9 +17,9 @@ This run recovered historical context read-only and created documentation. It di
 | Saved original-role state | AGENT1/AGENT2 completed records; AGENT3 TURN_COMPLETED with response | Historical outcomes supported by source chat |
 | Later state | Other later AGENT1/AGENT2 records are INTERRUPTED | Successful communication tests do not guarantee every later task finishes |
 
-AGENT3 completed at 2026-10-04T17:19:08.760Z, or 2026-10-05 01:19:08 Beijing time. The same original chat actually received and answered the marked Slack message. Its businessSuccessIndependentlyVerified flag is false: this is communication evidence only.
+AGENT3 has a saved completion record. The same original chat actually received and answered the marked Slack message. Its businessSuccessIndependentlyVerified flag is false: this is communication evidence only.
 
-## 2. Historical tests, not rerun here
+## 2. Historical test results
 
 | Item | Historical result | Limitation |
 |---|---|---|
@@ -44,16 +44,16 @@ AGENT3 completed at 2026-10-04T17:19:08.760Z, or 2026-10-05 01:19:08 Beijing tim
 
 These paths describe historical artifacts. They are templates, not paths that exist on every machine. No raw chat logs, state bodies, credentials, backup history, or candidate archives are published.
 
-- Source chat: `<USERPROFILE>/.codex/sessions/<date>/rollout-<timestamp>-<SOURCE_CHAT_ID>.jsonl`.
-- Bridge: `D:/Project/PROJECTS/fitness-slack-bridge/fitness-slack-bridge`.
-- Installation records: INSTALL-VERIFICATION-0.2.0.json, advisor-role-installation.json, work-role-status-fix-installation.json, portable-bridge-installation.json.
+- Source chat: `<SOURCE_CHAT_LOG_FILE>`.
+- Bridge: `<BRIDGE_DIR>`.
+- Installation records: `<INSTALL_VERIFICATION_RECORD>`, `<ADDITIONAL_ROLE_INSTALL_RECORD>`, `<ROLE_STATUS_PATCH_RECORD>`, `<PORTABLE_INSTALL_RECORD>`.
 - Original-route state: `.state/original-work-role-deliveries`; only role/state/time fields were used in this document.
-- Source output: `<USERPROFILE>/Documents/Codex/2026-10-04/referenced-chatgpt-conversation-this-is-an/outputs`.
-- Early CONTROL-CHECK/README documents describe an unconnected route; later migration guidance predates AGENT3. Read them with their date.
+- Source output: `<ARTIFACTS_DIR>`.
+- Early CONTROL-CHECK/README documents describe an unconnected route; later migration guidance predates AGENT3. Read them in the order the work progressed.
 - The notifier README contains an early not-enabled state; later real tests supplied the missing evidence.
-- Controlled-executor historical experience: `D:/AI-Library/memory/records/2026-10-04-fitness-slack-executor-controlled-write.md`, cross-checked against artifacts and the source chat.
+- Controlled-executor historical experience: `<EXPERIENCE_RECORD_FILE>`, cross-checked against artifacts and the source chat.
 
-Do not let an old title/version override later evidence. Resolve new conflicts through actual checks and retain provenance.
+Read old titles and versions alongside later tests. If the source and this guide disagree, check again, update the guide and keep the original records.
 
 ## 5. Official documentation versus deployed details
 

@@ -1,22 +1,21 @@
-# 避坑与排障：失败尝试留下的规则
+# 避坑与排障
 
-[English](en/03-pitfalls.md)
+[English](../en/03-pitfalls.md)
 
-以下采用“问题 → 分析 → 尝试解决”的顺序。资料列链接到具体内容；历史实测以原日志和产物为证据，外部资料解释机制，不替代本机验证。MDN 和微软编码/路径页为本轮补充核验；其余来源的使用范围见[资料索引](05-references.md)。
+这里记录遇到的问题、分析和处理尝试。测试结果依据原日志和产物，外部资料用于解释机制。MDN 和微软编码、路径文档是在整理时补充查阅的；其他来源见[资料索引](05-references.md)。
 
-## 1. 能力和验收误判
+## 1. 容易误判的结果
 
 | 失败或误解 | 已知原因 / 证据边界 | 正确做法 | 机制资料 |
 |---|---|---|---|
 | 协作输出像正确 Agent，于是认为原聊天接入 | 角色 prompt 相同，实际是 bridge 独立会话 | 同时核对固定 ID、原聊天消息、最终回复和 Slack 回执 | [App Server](https://learn.chatgpt.com/docs/app-server) |
-| AGENT3通过连接器发“你好”，但 @AGENT3 无法投递 | 出站连接器与 bot 入站路由独立 | 单独实现并验收AGENT3队列路由 | [官方队列测试源码](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs) |
+| AGENT3通过连接器发“你好”，但 @AGENT3 无法投递 | 出站连接器与 bot 入站路由独立 | 单独实现并验收 AGENT3 队列路由 | [官方队列测试源码](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs) |
 | hooks 提醒成功，被当作 Slack 能反向控制 | hooks 只报告事件 | 分开测通知和指令投递 | [hooks 事件](https://learn.chatgpt.com/docs/hooks) |
 | 队列 add 成功就称任务完成 | 队列只确认提交 | 用唯一 marker 查 completed 和 final_answer | [官方队列测试源码](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs) |
 | TURN_COMPLETED 就称功能成功 | 回合完成不等于业务验收 | 查回复、文件、测试等真实交付证据 | [官方队列测试源码](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs) |
 | 三行角色指令当作一条任务 | parser 按单消息单角色解析 | 每条消息一个角色；拒绝混合正文 | [Slack Socket Mode](https://docs.slack.dev/apis/events-api/using-socket-mode/) |
-| 截图显示几项测试通过就认定安装完成 | 安装还在运行，之后可能失败 | 看最终测试汇总、安装记录和新进程实际加载 | [App Server](https://learn.chatgpt.com/docs/app-server) |
 
-## 2. 本机协议与聊天身份
+## 2. 协议与聊天身份
 
 | 症状 | 根因或已知限制 | 修复与停止条件 | 机制资料 |
 |---|---|---|---|
@@ -50,7 +49,7 @@
 |---|---|---|---|
 | npm.ps1 被执行策略拦截 | PowerShell 默认解析到 .ps1 | 使用 npm.cmd；不放宽全局策略 | [PowerShell 执行策略](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies) |
 | PS 出现 `>>` | 通常是引号/括号未闭合而等待续行 | Ctrl+C 回正常提示符，再执行一条完整命令 | [PowerShell 解析](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing) |
-| 旧会话能读 D:\Project\SelfbuildBot 但不能写 | Codex 沙箱未将目录列为 writable root | 在该目录开新聊天并实测；不能靠改 NTFS ACL 解除 | [Codex 权限边界](https://learn.chatgpt.com/docs/app-server#approvals) |
+| 旧会话能读 `<DOCS_REPO_DIR>` 但不能写 | Codex 沙箱未将目录列为 writable root | 在该目录开新聊天并实测；不能靠改 NTFS ACL 解除 | [Codex 权限边界](https://learn.chatgpt.com/docs/app-server#approvals) |
 | 119/120，EXEC_PROJECT_CONFIG | 用户目录上级 Codex 配置影响隔离测试 | 移验证副本到独立目录，不跳过安全检查 | [Codex 权限边界](https://learn.chatgpt.com/docs/app-server#approvals) |
 | PowerShell 中文脚本解析失败 | Windows PowerShell 读取无 BOM UTF-8 的兼容问题 | 对含中文 .ps1 用兼容编码，并用 powershell.exe 实测解析 | [PowerShell 编码](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding) |
 | 含中文 JSON 读取失败 | Get-Content 默认编码误读 | 明确 `-Encoding UTF8` | [PowerShell 编码](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding) |
@@ -68,7 +67,7 @@
 
 **AGENT1/AGENT2 INTERRUPTED**：诊断发现同一回合随后 completed，说明过早采纳过渡状态。增加终态稳定性检查和状态重新核验。后续仍可能有真的中断；不能把所有 INTERRUPTED 都改成成功。
 
-遇到旧状态异常，优先查看 marker、turnId、状态和 final_answer。错误显示可能来自编码读取、Slack 发送或业务执行，需要定位层级。
+遇到旧状态异常，优先查看 marker、turnId、状态和 final_answer。错误显示可能来自编码读取、Slack 发送或业务执行，需要查清是哪一步出错。
 
 结果分析参照：[App Server 回合生命周期](https://learn.chatgpt.com/docs/app-server)、[hooks Stop](https://learn.chatgpt.com/docs/hooks#stop)。原聊天队列相关测试可见[官方源码](https://github.com/openai/codex/blob/main/codex-rs/app-server/tests/suite/v2/thread_queue.rs)；FAILED/INTERRUPTED 修复效果来自本机结果重新核验。
 
@@ -83,7 +82,7 @@
 
 边界资料：[App Server 审批](https://learn.chatgpt.com/docs/app-server#approvals)、[hooks 信任](https://learn.chatgpt.com/docs/hooks#review-and-trust-hooks)、[手机 Remote](https://learn.chatgpt.com/docs/remote-connections)。本地执行器的 claim、SSE 过滤与 Windows 句柄策略来自项目源码及离线证据，不是这些文档承诺的通用白名单能力。
 
-## 7. 最小排障顺序
+## 7. 排障顺序
 
 1. **输入层**：真正 @机器人了吗？频道是否已加 App？是否一条消息一个角色？
 2. **Slack 接收层**：token 类型、scope、Socket Mode、事件订阅和白名单是否正确？
@@ -95,4 +94,4 @@
 8. **反馈层**：状态 JSON 编码、稳定终态、Slack 发送错误是否正常？
 9. **验收层**：业务成果独立验证；重启/新机迁移分别需要真实往返。
 
-每一步记录观察和未确认项。不要为了修状态删除原聊天、生产去重记录、锁文件或凭据。
+每一步都记录看到的结果和还没确认的原因。不要为了修状态删除原聊天、生产去重记录、锁文件或凭据。

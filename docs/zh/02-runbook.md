@@ -1,22 +1,24 @@
 # 操作手册：部署、使用、重启与迁移
 
-[English](en/02-runbook.md)
+目录、文件和环境变量名已匿名化。使用前替换尖括号中的路径，并将 PROJECT_ROOT/PROJECT_CODE 改为所用 bridge 要求的变量名。
 
-全文采用 AGENT1/AGENT2/AGENT3 作为角色代号，THREAD_ID_AGENTn 作为原聊天 ID 占位符。Slack 指令是匿名化模板：现有旧机 parser 仍使用部署时的自定义 alias，直接照发 AGENTn 不会自动识别。使用时将模板代号映射到自己的配置；新部署需同步核对 parser、角色映射和 transport 允许列表。本文不修改运行中的 alias。
+[English](../en/02-runbook.md)
+
+角色使用 AGENT1/AGENT2/AGENT3，聊天 ID 使用 THREAD_ID_AGENTn。现有 parser 仍按部署时的 alias 解析，发送示例前要替换为自己的配置，并检查 parser、角色映射和 transport 允许列表。文档中的代号不会改变运行中的 alias。
 
 ## 1. 先确认部署对象
 
-这份仓库是文档库。以下安装流程需要旧机已有的 bridge 源码及安装产物；从本仓库 clone 下来的文档不能直接 `npm start`。旧机 bridge 路径的匿名化模板为（请替换 PROJECTS）：
+这份仓库是文档库。以下安装流程需要旧机已有的 bridge 源码及安装产物；从本仓库 clone 下来的文档不能直接 `npm start`。bridge 路径占位符为（请替换为自己的安装目录）：
 
 ```text
-D:\Project\PROJECTS\fitness-slack-bridge\fitness-slack-bridge
+<BRIDGE_DIR>
 ```
 
-将 bridge 放在业务仓库和 worktree 之外。`D:\Project\SelfbuildBot` 是本次文档 Git 仓库，不是现有服务的迁移目的地。
+将 bridge 放在业务仓库和 worktree 之外。`<DOCS_REPO_DIR>` 是本次文档 Git 仓库，不是现有服务的迁移目的地。
 
-旧机已安装 0.2.0 及后续原聊天队列路由，不要为了阅读本手册重新执行所有历史安装脚本。下面先给新部署的顺序，再给旧机日常步骤。
+旧机已安装 0.2.0 及后续原聊天队列路由，不要为了阅读本手册重新执行所有历史安装脚本。后文分别说明部署和日常操作。
 
-## 2. 新部署前置条件
+## 2. 部署前准备
 
 - Windows，Node >=22.16；旧产物锁定 Codex CLI/SDK 0.160.0、Slack Bolt 5.1.0。
 - 可登录的桌面客户端、本机 app-server daemon/control socket，以及目标原聊天的执行连接。
@@ -40,10 +42,10 @@ D:\Project\PROJECTS\fitness-slack-bridge\fitness-slack-bridge
 
 ## 4. 本地配置与基础联调
 
-取得经过审阅的 bridge 源码及 lockfile 后，在其目录运行：
+检查 bridge 源码和 lockfile 后，在安装目录运行：
 
 ```powershell
-Set-Location 'D:\Project\PROJECTS\fitness-slack-bridge\fitness-slack-bridge'
+Set-Location '<BRIDGE_DIR>'
 npm.cmd ci
 ```
 
@@ -55,21 +57,21 @@ SLACK_APP_TOKEN=xapp-REPLACE_ME
 SLACK_TEAM_ID=T_REPLACE_ME
 SLACK_CHANNEL_ID=C_REPLACE_ME
 SLACK_ALLOWED_USER_IDS=U_REPLACE_ME
-FITNESS_ROOT=D:/Project/PROJECTS/Fitness
-FITNESS_CODE=D:/Project/PROJECTS/Fitness/.worktrees/fitness-local
+PROJECT_ROOT=<PROJECT_ROOT_DIR>
+PROJECT_CODE=<PROJECT_WORKTREE_DIR>
 MOCK_MODE=true
 CODEX_MODEL=
 TURN_TIMEOUT_MS=180000
 MAX_TURNS_PER_DAY=30
 ```
 
-示例不是旧机真实配置。机器人 token 只在本地保存。先依次运行 `npm.cmd test`、`npm.cmd run doctor`；doctor 仅检查格式、路径和依赖，不证明 Slack 登录或模型可用。
+示例中的值需要替换，机器人 token 只保存在本地。依次运行 `npm.cmd test`、`npm.cmd run doctor`；doctor 仅检查格式、路径和依赖，不证明 Slack 登录或模型可用。
 
-在 mock 模式启动基础桥接，真正选择 @Fitness Team 后测试 ping/帮助。依照所用源码的 Codex 登录流程完成认证，并审阅 `npm.cmd run smoke:codex` 后再执行：它可能调用模型。只在明确完成对应基础链路验证后，将所需模型路径启用。
+以 mock 模式启动基础 bridge，在 Slack 中选择自己的机器人，测试 ping 和帮助。按所用源码的流程登录 Codex。`npm.cmd run smoke:codex` 可能调用模型，先查看脚本再运行，通过测试后再启用对应模型路径。
 
 **MOCK_MODE 是基础角色路径的开关，不能假定它会阻止新增原聊天队列路由发送任务。** 原聊天路由应保持未启用，直到单独完成身份核验和授权测试。
 
-## 5. 原聊天队列路线的安装与验证顺序
+## 5. 安装并验证原聊天队列
 
 历史安装产物位于旧聊天输出的 `desktop-agent-routing`。其中有阶段性候选和测试快照，应选择最终对应版本，不能将全部文件递归复制进生产。
 
@@ -77,32 +79,32 @@ MAX_TURNS_PER_DAY=30
 2. **只读探针**：连接 daemon proxy，完成 WebSocket Upgrade；initialize 声明 `capabilities.experimentalApi:true`；只用 `thread/read` 和 `thread/queue/list` 检查身份与队列。
 3. **隔离测试**：由桌面创建独立测试聊天，只发送无工具固定回复任务。记录一次性标识，确认原聊天显示消息且回复；不要用原业务 Agent 调试协议。
 4. **Slack 测试路由**：安装前完整离线测试、校验基线 hash、备份，失败即停止。先验证“已排队”，再验证最终回复、零工具调用和原历史保留。
-5. **角色绑定**：核对目标 ID 和名称，将角色映射与 transport 允许列表同时更新。先接AGENT1/AGENT2，再单独接AGENT3；每个角色分别通信验收。
+5. **角色绑定**：核对目标 ID 和名称，将角色映射与 transport 允许列表同时更新。先接 AGENT1/AGENT2，再接 AGENT3，每个角色单独测试往返通信。
 6. **结果判断**：用 SlackDelivery 标识匹配回合，等待 final_answer；failed/interrupted 需要稳定性检查。只重新读取与修正已有结果，不重发任务修复状态。
 7. **安装后核对**：检查实际处理消息的进程加载了新源码，再查询每个角色的状态。出现旧帮助菜单时先查安装记录和启动路径。
 
-旧机脚本名依次包含 `Install-Desktop-Queue-Test.ps1`、`Install-Queue-Status-Fix.ps1`、`Install-Work-Role-Routing.ps1`、`Install-Work-Role-Status-Fix.ps1`、`Update-Bridge-Portable-Startup.ps1`、`Install-Advisor-Routing.ps1`。它们是旧机分阶段升级产物，不是新电脑通用安装器。
+旧机脚本名依次包含 `<QUEUE_TEST_INSTALLER>`、`<QUEUE_STATUS_PATCH>`、`<ROLE_ROUTING_INSTALLER>`、`<ROLE_STATUS_PATCH>`、`<STARTUP_UPDATE_SCRIPT>`、`<ADDITIONAL_ROLE_INSTALLER>`。它们是旧机分阶段升级产物，不是新电脑通用安装器。
 
 ## 6. 日常 Slack 指令
 
 先从 Slack 候选列表选择机器人，下面每条作为独立消息发送：
 
 ```text
-@Fitness Team ping
-@Fitness Team AGENT1：状态
-@Fitness Team AGENT2：状态
-@Fitness Team AGENT3：状态
+@<<Slack机器人>> ping
+@<<Slack机器人>> AGENT1：状态
+@<<Slack机器人>> AGENT2：状态
+@<<Slack机器人>> AGENT3：状态
 ```
 
 首次验证一个原角色时，可发送：
 
 ```text
-@Fitness Team AGENT3：仅验证通信，不读取文件、不调用工具、不修改项目。请只回复：AGENT3原聊天连接成功
+@<<Slack机器人>> AGENT3：仅验证通信，不读取文件、不调用工具、不修改项目。请只回复：AGENT3原聊天连接成功
 ```
 
-旧源码只接受一条消息一个原角色。不要在AGENT1的正文中嵌入 `AGENT2：…`。`协作：…` 使用桥接自建角色，不能作为三个原聊天同时投递的替代用法。
+旧源码只接受一条消息一个原角色。不要在 AGENT1 的正文中嵌入 `AGENT2：…`。`协作：…` 使用桥接自建角色，不能作为三个原聊天同时投递的替代用法。
 
-当前原聊天路由默认 dailyLimit=3，三个角色共享按 UTC 日期计数的额度；实际服务参数需检查调用处。基础 `.env` 的 MAX_TURNS_PER_DAY 不必然等于该路由的投递配额。源码最多跟踪约 90 秒，超过时限可转 PENDING，此时查询状态，不自动重投。
+原聊天路由函数默认 dailyLimit=3，三个角色共享按 UTC 日期计算的额度。服务可能覆盖这个值，需检查调用处。基础 `.env` 的 MAX_TURNS_PER_DAY 不必然等于该路由的投递配额。源码最多跟踪约 90 秒，超过时限可转 PENDING，此时查询状态，不自动重投。
 
 | 返回状态 | 含义 | 下一步 |
 |---|---|---|
@@ -118,23 +120,23 @@ MAX_TURNS_PER_DAY=30
 
 ## 7. 审批提醒与手机处理
 
-通知程序是独立部署，旧机位置：`<USERPROFILE>\Documents\Codex\fitness-desktop-notifier`。其 state、stdout/stderr 也在该目录。hooks 脚本写本地事件，由 worker 转发 Slack。
+通知程序独立部署在 `<NOTIFIER_DIR>`，状态文件和 stdout/stderr 日志也在这里。hooks 写入本地事件，worker 将事件转发到 Slack。
 
 首次安装时先备份现有 hooks，使用通知包的 Enable 入口；遇到已有配置或修改应审查差异。通过 Codex `/hooks` 审阅并信任六类 hook，确认 Active 和 Review 状态。READY 只证明 worker 就绪，不证明 hooks 已启用。
 
 收到需要批准的提醒后，在手机 ChatGPT 的 Codex/Remote 中打开同一主机与原聊天，查看具体权限范围后批准或拒绝。手机和桌面必须使用相同账户与工作区，主机应用保持在线。[官方 Remote 说明](https://learn.chatgpt.com/docs/remote-connections)
 
-`PreToolUse` 的权限申请提示可能只是“可能需要批准”。`PostToolUse` 表示操作返回；`Stop` 表示回合结束。批准后继续、操作返回、业务成功不能合并成同一状态。最终答复摘录会发到 Slack，应只含适合该频道的简报。
+`PreToolUse` 的权限申请提示可能只是“可能需要批准”。`PostToolUse` 表示操作返回；`Stop` 表示回合结束。任务继续执行或工具返回后，还需要检查业务结果。最终答复摘录会发到 Slack，应只含适合该频道的简报。
 
 不要使用未安装的 0.2.1 指令来批准桌面弹窗。受控执行包的操作另有：
 
 ```text
-@Fitness Team 批准执行 <package-id> <12位hash>
-@Fitness Team 执行状态 <package-id>
-@Fitness Team 取消执行 <package-id>
+@<<Slack机器人>> 批准执行 <package-id> <12位hash>
+@<<Slack机器人>> 执行状态 <package-id>
+@<<Slack机器人>> 取消执行 <package-id>
 ```
 
-执行包应在原 Slack 线程中由指定身份处理，核对包范围和基线。不能自动 commit/merge/push/deploy；这些不是当前 Executor 的已验证能力。
+由指定用户在原 Slack 线程中处理执行包，核对修改范围和基线。当前 Executor 尚未验证自动 commit、merge、push 或 deploy。
 
 ## 8. 重启后的恢复
 
@@ -145,13 +147,13 @@ MAX_TURNS_PER_DAY=30
 1. 登录原 Windows 用户，联网并保持主机唤醒。
 2. 打开桌面应用，确认 Remote/原聊天连接可用。
 3. 用旧聊天输出中的 `Check-Bridge-Startup.ps1` 检查启动登记、UserSid、BaseDir、Node、通知 Startup、daemon/socket 及 bridge 状态。
-4. 在 Slack 分别发 ping、AGENT1状态、AGENT2 状态、AGENT3状态。
+4. 在 Slack 分别发 ping、AGENT1 状态、AGENT2 状态、AGENT3 状态。
 5. 再发一条无工具通信任务，核对原聊天收到、回复及 Slack TURN_COMPLETED。
 6. 记录真实重启后的结果，才能将“重启恢复”标为通过。检查脚本的 `RealRebootVerified=false` 是固定的保守标记，不会自己完成此验收。
 
-旧机快捷入口：`Status-Fitness.cmd` 查看状态；`Restart-Bridge.cmd` 只重启 bridge；`Start-Fitness.cmd` 启动守护组件；`Stop-Fitness.cmd` 停止当次运行；Enable/Disable-Autostart 控制下次登录。Start/Stop 可能也管理可选 Desktop Commander Remote，执行前查看本机入口。
+旧机快捷入口：`<STATUS_LAUNCHER>` 查看状态；`<RESTART_LAUNCHER>` 只重启 bridge；`<START_LAUNCHER>` 启动守护组件；`<STOP_LAUNCHER>` 停止当次运行；`<ENABLE_AUTOSTART>`/`<DISABLE_AUTOSTART>` 控制下次登录。Start/Stop 可能也管理可选 Desktop Commander Remote，执行前查看本机入口。
 
-CONNECTED_REPORTED 是进程报告，不是端到端证据。不要按名称杀全部 node.exe，不要删不明锁。Desktop Commander Remote 是旧维护通道，原聊天队列投递不依赖它。
+CONNECTED_REPORTED 只表示进程报告了连接，仍需测试消息往返。不要按名称杀全部 node.exe，不要删不明锁。Desktop Commander Remote 是旧维护通道，原聊天队列投递不依赖它。
 
 ## 9. 换电脑迁移
 
@@ -165,4 +167,4 @@ CONNECTED_REPORTED 是进程报告，不是端到端证据。不要按名称杀�
 8. 切生产前先停旧机 bridge 及自启，同一机器人只留一份生产消费者。迁移状态时保留去重/claim，不能重放旧未确认任务。
 9. 先验无工具往返，再验手机审批通知，再验真实重启。旧备份保留；失败时停新机连接后恢复旧机，不能双机并行抢消息。
 
-现有迁移包是源文件包，不是已在新机验证的一键恢复包。不能宣称本手册已完成迁移验收。
+现有迁移包只包含源文件，尚未在新电脑上验证一键恢复或完整迁移。

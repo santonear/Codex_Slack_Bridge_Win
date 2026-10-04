@@ -1,7 +1,6 @@
 # Slack → Local Codex Bridge: The Complete Process
 
-[中文版](../01-process.md) · Prepared on 2026-10-05, Asia/Shanghai.
-
+[中文版](../zh/01-process.md)
 ## 1. Goal and final design
 
 The goal was to send tasks from Slack into existing local Codex chats, preserve their history and permissions, notify the user when approval was needed, and return the response to Slack after the user approved on their phone.
@@ -29,7 +28,7 @@ Socket Mode establishes an outbound WebSocket connection, so this design needs n
 
 ## 2. Four distinct capabilities
 
-| Capability | Execution owner | History and permissions | Evidence boundary |
+| Capability | Who runs it | History and permissions | What the test shows |
 |---|---|---|---|
 | Bridge-owned collaboration | Independent Codex role sessions | Separate history; read-only reviews | Role-like answers do not prove original chats received a task |
 | Original-chat communication | Original desktop chat's writer | Fixed original ID; original permissions | Verify enqueueing, execution, final answer, and Slack feedback separately |
@@ -38,17 +37,17 @@ Socket Mode establishes an outbound WebSocket connection, so this design needs n
 
 ChatGPT scope: this attempt did not successfully connect the original ChatGPT chat. This handbook focuses on Codex and Slack.
 
-## 3. Evolution of the solution
+## 3. How the solution developed
 
-These are historical observations from the source chat and installation artifacts. Dates below use Beijing time; source log timestamps use UTC, so some installation directory names fall on the following date.
+The following phases follow the attempts recorded in the source chat and installation files.
 
 ### Phase 1: Read-only collaboration and controlled execution
 
-The initial bridge used independent product, AGENT2, and AGENT1 roles. A collaboration task ran a bounded sequence, forwarding read-only file snapshots and upstream findings. These were not the desktop's original chats.
+The initial bridge used independent product, AGENT2, and AGENT1 roles. A collaboration task made up to three calls in sequence, passing read-only file snapshots and the previous role’s findings to the next role. These were not the desktop's original chats.
 
 The source chat began with version 0.1.3. The user then chose controlled file writes: Codex proposes structured edits; the host validates them and writes into a separate executor worktree. The model does not receive arbitrary shell access.
 
-Execution packages bind the user, Slack thread, base revision, exact paths, hash, expiration, and one-time state. A claim is persisted before execution; terminal results are persisted before Slack feedback. Crashes and feedback failures must not replay model execution.
+Execution packages bind the user, Slack thread, base revision, exact paths, hash, expiration, and one-time state. A claim is persisted before execution; final results are saved before Slack feedback. Crashes and feedback failures must not replay model execution.
 
 Hardening included filtering both tool catalogs, validating complete SSE responses, restricting inherited configuration, using native Windows handles, and rejecting reparse/hardlink paths. The first 0.2.0 installation failed a legacy health check and restored 0.1.3. Preserving the old health marker while reporting the actual version allowed the upgrade.
 
@@ -64,7 +63,7 @@ Real approval reminders and turn summaries were observed. A separate desktop tes
 
 ### Phase 3: Separating role identity from original-chat identity
 
-The user wanted existing chats rather than newly created role sessions. Three example commands in one Slack message were initially treated as one task. Collaboration answers also came from bridge-owned sessions. The acceptance criterion therefore became: the message must appear in the intended original chat, identified by its fixed ID.
+The user wanted existing chats rather than newly created role sessions. Three example commands in one Slack message were initially treated as one task. Collaboration answers also came from bridge-owned sessions. The test now had to confirm that the message appeared in the intended original chat, identified by its fixed ID.
 
 AGENT1 and AGENT2 IDs were checked. The third requested product chat belonged to ChatGPT and was not connected. Early route candidates explicitly said “not delivered” rather than silently falling back to independent roles.
 
@@ -74,7 +73,7 @@ The local CLI/SDK baseline was 0.160.0. The proxy probe initially timed out at i
 
 The desktop used an internal stdio server connection; the daemon exposed a control socket. Reading stored records did not provide ownership of the desktop's writer.
 
-Before resume tests, the original chat logs, a consistent index snapshot, hooks, and bridge files were backed up, and seven business worktrees were recorded. Tests encountered a response-size limit, invalid permission parameters, and resume rejection; original files and project state were preserved.
+Before resume tests, the original chat logs, a consistent index snapshot, hooks, and bridge files were backed up, and the business worktree states were recorded. Tests encountered a response-size limit, invalid permission parameters, and resume rejection; original files and project state were preserved.
 
 One rejection was initially attributed to `paginated` history. A later discovery showed `readOnly` was also wrong for the deployed method, so history format was not established as the sole cause. New isolated threads exposed other issues: empty threads not persisting, outdated permission fields, source filtering, and desktop visibility.
 
@@ -96,7 +95,7 @@ The ChatGPT connection attempt was unsuccessful and is not expanded here.
 
 An initial AGENT3 greeting sent through the Slack connector only proved outbound messaging. The actual AGENT3 queue route was then added. Installation first copied old offline-test temporary data, reaching a 262-character path. Copying only formal test files fixed the installer.
 
-At 01:19 on 2026-10-05 Beijing time, the original AGENT3 chat received a `SlackDelivery-…` message and replied. This run also read the stored `TURN_COMPLETED` record with a reply. This verifies communication, not business results.
+Subsequently, the original AGENT3 chat received a `SlackDelivery-…` message and replied. This run also read the stored `TURN_COMPLETED` record with a reply. This verifies communication, not business results.
 
 ## 4. Anonymized binding template
 
@@ -120,9 +119,9 @@ These are placeholders. The installed parser still uses the user's real aliases;
 8. Persist PENDING on timeout; uncertain failures may be UNKNOWN. Status queries re-read the existing turn rather than resubmitting it.
 9. Return the final response in the source Slack thread; independently verify business acceptance.
 
-The installed stable-terminal check requires five identical failed/interrupted observations; completed requires final_answer. This addresses observed races, not all possible future races.
+The installed stable-terminal check requires five identical failed/interrupted observations; completed requires final_answer. This fixed the races seen in testing. Later versions may behave differently.
 
-## 6. Permission boundaries
+## 6. Permissions
 
 The submitted message explicitly preserves existing chat permissions, approval rules, and project constraints. Original chats are not forced read-only simply because bridge-owned roles are read-only.
 
