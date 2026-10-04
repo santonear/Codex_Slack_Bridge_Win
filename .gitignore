@@ -7,6 +7,10 @@ source-chat-notes.json
 .codex-home/
 .state/
 node_modules/
+.worktrees/
+.superpowers/
+test-results/
+playwright-report/
 *.sqlite*
 *.log
 *.zip

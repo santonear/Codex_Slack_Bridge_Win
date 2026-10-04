@@ -8,7 +8,7 @@
 
 Research used public search plus domain-restricted GitHub, GitLab, Gitee, Codeberg, and Bitbucket queries. READMEs, project documentation, and selected source files were opened. No third-party project was installed, executed, or fully audited. Their capabilities below are documented claims, not local verification.
 
-This repository publishes bilingual documentation, not runtime bridge code. “Our implementation” means the previously deployed old-machine design supported by historical evidence. Functional overlap and release completeness are separate comparisons.
+The comparisons primarily describe the historical deployment. This repository now also provides a Windows runtime and bilingual setup wizard. The historical mobile approval notifier and separate executor are not included in this version. Similar features do not imply the same deployment or verification scope.
 
 ## 2. Direct Slack bridges
 
@@ -33,6 +33,6 @@ Selected source checks: [Agent contract](https://github.com/earonesty/codex-slac
 
 On Windows, this bridge submits tasks to fixed original desktop chat IDs through queue/add. The original writer processes them, and the bridge checks the marker, turn and final answer before replying in Slack. Tests also covered a separate hook worker, phone approval and an offline controlled executor. The work included replay prevention and Windows encoding/path fixes. These are recorded results, not evidence that the design is unique.
 
-Other projects publish runtime code for chat discovery, dynamic binding, interactive approval, attachments, containers or PR delivery. This repository still contains documentation only. Actual reboot recovery, new-machine migration and live-model executor tests remain unfinished.
+Other projects publish runtime code for chat discovery, dynamic binding, interactive approval, attachments, containers or PR delivery. The current runtime provides fixed chat bindings, queue delivery, durable records and final feedback. Live Slack round trips, reboot recovery and setup on another computer remain unverified for this version; a separate executor is outside its scope.
 
 If a project does not document an original-desktop queue route, support remains unconfirmed. Check its version and source, then test it before replacing the existing installation.

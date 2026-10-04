@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {validateConfig} from '../src/config.mjs';
+export const config=()=>({version:1,language:'en',slack:{teamId:'T12345678',channelId:'C12345678',allowedUserIds:['U12345678']},routes:[{alias:'AGENT1',threadId:'11111111-1111-4111-8111-111111111111',title:'Example chat'}],desktop:{},limits:{dailyLimit:3,turnTimeoutMs:90000}});
+test('rejects duplicate routes and empty user allowlist',()=>{let c=config();c.routes.push({...c.routes[0]});assert.throws(()=>validateConfig(c));c=config();c.slack.allowedUserIds=[];assert.throws(()=>validateConfig(c));});
+test('rejects unsafe limits and malformed identities',()=>{for(const change of [c=>c.limits.dailyLimit=0,c=>c.routes[0].threadId='../escape',c=>c.slack.teamId='workspace',c=>c.desktop.executablePath='relative.exe']){const c=config();change(c);assert.throws(()=>validateConfig(c));}});
+test('returns a detached normalized valid configuration',()=>{const c=config(),v=validateConfig(c);assert.equal(v.routes[0].alias,'AGENT1');c.routes[0].title='changed';assert.equal(v.routes[0].title,'Example chat');});

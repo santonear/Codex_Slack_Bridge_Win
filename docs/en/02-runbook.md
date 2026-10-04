@@ -8,7 +8,7 @@ AGENT1/AGENT2/AGENT3 and THREAD_ID_AGENTn are anonymized placeholders. The insta
 
 ## 1. Before using this guide
 
-This is a documentation repository, not a runnable bridge distribution. The procedures need the reviewed source, lockfile, and installation artifacts from the existing machine. Do not run npm start in this documentation directory.
+This page covers the historical deployment and requires its original source and installation artifacts. For the current runtime, use the [quick start](07-quickstart.md); do not apply the old commands to this version.
 
 The anonymized historical bridge directory is:
 

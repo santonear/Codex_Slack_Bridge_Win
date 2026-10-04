@@ -1,0 +1,25 @@
+import {spawn} from 'node:child_process';import crypto from 'node:crypto';import os from 'node:os';import path from 'node:path';import {FrameReader,encodeFrame,verifyUpgrade} from './websocket.mjs';import {probeSchema} from './discovery.mjs';
+export function chatTitle(thread){return typeof thread.name==='string'&&thread.name.trim()?thread.name.trim():'(untitled)';}
+export async function connectDesktop({paths,allowedThreadIds=[],setup=false,timeoutMs=15000,spawnProxy,onDisconnect=()=>{}}){
+ const env={};for(const k of ['PATH','SYSTEMROOT','WINDIR','USERPROFILE','APPDATA','LOCALAPPDATA','TEMP','TMP'])if(process.env[k])env[k]=process.env[k];env.CODEX_HOME=path.join(os.homedir(),'.codex');
+ const child=spawnProxy?spawnProxy():spawn(paths.executablePath,['app-server','proxy','--sock',paths.socketPath],{env,windowsHide:true,stdio:['pipe','pipe','pipe']});
+ let seq=0,closed=false,buffer=Buffer.alloc(0),upgraded=false,upgradeResolve,upgradeReject;const pending=new Map(),key=crypto.randomBytes(16).toString('base64');
+ const fail=e=>{if(closed)return;closed=true;onDisconnect('DESKTOP_DISCONNECTED');upgradeReject?.(e);for(const p of pending.values()){clearTimeout(p.timer);p.reject(e);}pending.clear();child.stdin.end();const timer=setTimeout(()=>child.kill(),300);timer.unref();};
+ const write=m=>{if(closed)throw Error('DESKTOP_CLOSED');child.stdin.write(encodeFrame(Buffer.from(JSON.stringify(m))));};
+ const reader=new FrameReader({onMessage:text=>{const m=JSON.parse(text);if(m.method&&m.id!==undefined){write({id:m.id,error:{code:-32601,message:'Bridge does not approve or execute tools'}});return;}const p=pending.get(m.id);if(!p)return;clearTimeout(p.timer);pending.delete(m.id);if(m.error){const e=Error(m.error.code===-32601?'DESKTOP_INCOMPATIBLE':'DESKTOP_RPC_ERROR');e.rpcCode=m.error.code;p.reject(e);}else p.resolve(m.result);},onControl:(op,data)=>{if(op===9)child.stdin.write(encodeFrame(data,10));if(op===8)fail(Error('DESKTOP_CLOSED'));}});
+ child.stderr.on('data',()=>{});child.on('error',()=>fail(Error('DESKTOP_PROCESS_ERROR')));child.on('exit',()=>fail(Error('DESKTOP_CLOSED')));child.stdin.on('error',()=>fail(Error('DESKTOP_CLOSED')));
+ child.stdout.on('data',part=>{try{if(!upgraded){buffer=Buffer.concat([buffer,part]);const end=buffer.indexOf('\r\n\r\n');if(end<0){if(buffer.length>16384)throw Error('DESKTOP_UPGRADE_LIMIT');return;}verifyUpgrade(buffer.subarray(0,end).toString(),key);part=buffer.subarray(end+4);buffer=Buffer.alloc(0);upgraded=true;upgradeResolve();}reader.push(part);}catch(e){fail(e);}});
+ const rpc=async(method,params={})=>{const global=['initialize','account/read'];const bound=['thread/read','thread/queue/list','thread/queue/add'];if(!global.includes(method)&&!(setup&&method==='thread/list')&&!(bound.includes(method)&&(allowedThreadIds.includes(params.threadId)||setup&&method!=='thread/queue/add')))throw Error('DESKTOP_SCOPE');
+ if(closed)throw Error('DESKTOP_CLOSED');return new Promise((resolve,reject)=>{const id=++seq,timer=setTimeout(()=>{pending.delete(id);reject(Error('DESKTOP_TIMEOUT'));},timeoutMs);pending.set(id,{resolve,reject,timer});try{write({id,method,params});}catch(e){pending.delete(id);clearTimeout(timer);reject(e);}});};
+ try{await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{fail(Error('DESKTOP_UPGRADE_TIMEOUT'));},timeoutMs);upgradeResolve=()=>{clearTimeout(timer);resolve();};upgradeReject=e=>{clearTimeout(timer);reject(e);};child.stdin.write('GET / HTTP/1.1\r\nHost: localhost\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: '+key+'\r\nSec-WebSocket-Version: 13\r\n\r\n');});
+ const info=await rpc('initialize',{clientInfo:{name:'codex_slack_bridge_win',version:'0.3.0'},capabilities:{experimentalApi:true}});write({method:'initialized',params:{}});
+ return {
+ async probe(){let login='unknown';try{const a=await rpc('account/read',{refreshToken:false});login=a.account?'pass':a.requiresOpenaiAuth===false?'pass':'fail';}catch{}return {connection:'pass',login,queueSchema:spawnProxy?'unknown':await probeSchema(paths.executablePath),version:String(info?.userAgent??'').slice(0,200)};},
+ async listChats(){if(!setup)throw Error('DESKTOP_SCOPE');const chats=[];let cursor=null;for(let i=0;i<10;i++){const r=await rpc('thread/list',{limit:50,cursor});if(!Array.isArray(r?.data))throw Error('DESKTOP_SCHEMA');chats.push(...r.data.map(t=>({threadId:t.id,title:chatTitle(t)})));cursor=r.nextCursor;if(!cursor)break;}return {chats,nextCursor:cursor};},
+ async readChat(threadId){const r=await rpc('thread/read',{threadId,includeTurns:true});if(!r?.thread||r.thread.id!==threadId)throw Error('DESKTOP_IDENTITY');return r.thread;},
+ async listQueue(threadId){const r=await rpc('thread/queue/list',{threadId,limit:10});if(!Array.isArray(r?.data))throw Error('DESKTOP_SCHEMA');return r;},
+ async enqueue(threadId,{marker,text}){return rpc('thread/queue/add',{threadId,clientUserMessageId:marker,input:[{type:'text',text}]});},
+ close(){fail(Error('DESKTOP_CLOSED'));}
+ };
+ }catch(e){fail(e);throw e;}
+}

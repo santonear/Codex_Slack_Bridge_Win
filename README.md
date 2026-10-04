@@ -1,58 +1,76 @@
 # Codex_Slack_Bridge_Win
 
+Less chair time, more life time. This human was made to roam—not to become a desktop accessory.
+
 **[English](#english) | [中文](#中文)**
 
 ## 中文
 
-Slack → Windows 本地 Codex bridge 的设计复盘、部署步骤和避坑手册。
+在 Slack 中向 Windows 本机已有的 Codex 桌面聊天发送任务，并把最终回复带回原 Slack 线程。AGENT1、AGENT2 等名称对应你在向导中选择的聊天。
 
-公开文档中的 Slack 工作区、频道、用户和机器人均使用占位符：`<<Slack工作组>>`、`<<Slack频道>>`、`<<Slack用户>>`、`<<Slack机器人>>`。机器人提及示例须在 Slack 中选择自己的真实机器人，不能直接照发占位符。
+下载仓库 ZIP 并解压，安装 Node.js 22.16 或更高版本，登录并打开 Codex 桌面应用，然后双击 **Start-Bridge.cmd**。首次运行会询问是否安装依赖，并打开中英双语本地浏览器向导。
 
-来源：原聊天 `THREAD_ID_AGENT3`、现有 bridge 源码和安装记录。
+- [从零配置和通信测试](docs/zh/07-quickstart.md)
+- [运行程序排障](docs/zh/08-runtime-troubleshooting.md)
+- [验证范围](docs/runtime-verification.md)
 
-## 阅读顺序
+本版使用 Socket Mode，不需要公网服务器。只接收指定工作区、频道和用户的请求。配置与 token 保存在当前 Windows 用户的本地数据目录；公开仓库不包含凭据和私人聊天记录。
 
-1. [全过程：目标、架构、演进与验收](docs/zh/01-process.md)
-2. [步骤：安装、日常使用、重启和迁移](docs/zh/02-runbook.md)
-3. [避坑：失败尝试、原因、处理和排障顺序](docs/zh/03-pitfalls.md)
-4. [证据范围与待完成事项](docs/zh/04-evidence.md)
-5. [官方文档与第三方知识库索引](docs/zh/05-references.md)
-6. [公开类似项目及功能比较](docs/zh/06-related-projects.md)
+投递前保存记录。结果不确定时阻止新任务，不自动重投；回传失败可以查询状态并补发回复。桌面聊天的权限和审批继续生效。
 
-角色名称已匿名化为 AGENT1/AGENT2/AGENT3；部署命令为模板，需映射到自己的实际配置。
+本版不包含自启动、手机审批通知组件或独立执行器。真实 Slack 往返、重启恢复及新电脑配置仍需实测。本次尝试未能成功与 ChatGPT 连接。
 
-## 已验证的功能
+### 经验与手册
 
-- Slack 指令能进入原「AGENT1」「AGENT2」「AGENT3」Codex 聊天；原聊天回复可返回 Slack。
-- 原聊天需要审批时，Slack 发提醒；用户在手机批准，回合结束后 Slack 发简报。原聊天中的通信和手机审批已在历史联调中验证。
-- 桥接自建的产品 → AGENT2 → AGENT1只读协作仍是另一条链路。
-- 0.2.0 的受控执行器在离线模拟中验证过审批、防重放及独立 worktree 落盘。
+以下内容记录早期部署，部分功能属于旧版独立组件。安装当前运行程序请使用上面的快速开始。
 
-## 尚未完成
+1. [全过程与架构](docs/zh/01-process.md)
+2. [旧版部署与日常使用](docs/zh/02-runbook.md)
+3. [问题、分析与解决尝试](docs/zh/03-pitfalls.md)
+4. [历史证据范围](docs/zh/04-evidence.md)
+5. [官方文档与第三方知识库](docs/zh/05-references.md)
+6. [类似项目与差异](docs/zh/06-related-projects.md)
 
-- 本次尝试未能成功与 ChatGPT 原聊天连接。
-- 0.2.1 Slack 直接权限审批只是候选包，未通过全部回归、未安装；不能批准任意桌面权限弹窗。
-- 用户登录后的自启动登记和检查曾通过，真正重启后的通信验收尚未完成；新电脑迁移也未实测。
-
-本仓库目前只有 Markdown 文档，尚未发布运行代码或一键安装程序，也不包含密钥、认证数据和原始聊天记录。部署时需要已有 bridge 源码和安装产物。早期文档中的“尚未接入”要结合后续队列测试结果阅读。
+文档中的 Slack 身份和本机路径使用占位符。发送指令时，请在 Slack 中选择自己的真实机器人。
 
 ## English
 
-This guide records how the Slack → Windows local Codex bridge was built, deployed and tested, including failed attempts and fixes.
+Send tasks from Slack to an existing Codex desktop chat on your Windows computer and return the final answer to the original Slack thread. AGENT1 and AGENT2 refer to the chats you select during setup.
 
-Slack workspace, channel, user and bot identities use placeholders: `<<Slack workspace>>`, `<<Slack channel>>`, `<<Slack user>>`, `<<Slack bot>>`. Select your actual bot in Slack instead of sending the placeholder literally.
+Download and extract the repository ZIP, install Node.js 22.16 or newer, and open the signed-in Codex desktop app. Double-click **Start-Bridge.cmd**. The first launch asks before installing dependencies and opens a local setup wizard in English or Chinese.
 
-1. [Complete process and architecture](docs/en/01-process.md)
-2. [Setup, daily use, reboot, and migration](docs/en/02-runbook.md)
-3. [Pitfalls: problems, analysis, and resolution attempts](docs/en/03-pitfalls.md)
-4. [Evidence and outstanding acceptance](docs/en/04-evidence.md)
+- [Setup and communication test](docs/en/07-quickstart.md)
+- [Runtime troubleshooting](docs/en/08-runtime-troubleshooting.md)
+- [Verification scope](docs/runtime-verification.md)
+
+Socket Mode needs no public server. Requests are restricted to the configured workspace, channel and users. Settings and tokens stay in the current Windows user’s local data directory. This repository contains no credentials or private conversations.
+
+Delivery records are saved before submission. Uncertain results block new tasks and are never automatically resubmitted. Failed feedback can be queried and retried. The desktop chat keeps its existing permissions and approvals.
+
+This version includes no automatic startup, mobile approval notifier or independent executor. A live Slack round trip, reboot recovery and setup on another computer still need testing. The ChatGPT connection attempt was unsuccessful.
+
+### Experience and manuals
+
+These documents describe the earlier deployment, including separate components. Use the quick start above to install the current runtime.
+
+1. [Process and architecture](docs/en/01-process.md)
+2. [Historical deployment and daily use](docs/en/02-runbook.md)
+3. [Problems, analysis and attempted fixes](docs/en/03-pitfalls.md)
+4. [Historical evidence](docs/en/04-evidence.md)
 5. [Official documentation and third-party references](docs/en/05-references.md)
-6. [Public related projects and comparison](docs/en/06-related-projects.md)
+6. [Related projects and differences](docs/en/06-related-projects.md)
 
-Roles and thread IDs are anonymized as AGENT1/AGENT2/AGENT3 and THREAD_ID_AGENTn. Command examples are templates; map them to your actual deployment.
+Slack identities and machine paths in the manuals are placeholders. Select your actual bot in Slack when sending a command.
 
-Historical tests verified submissions into the original Codex chats, original-chat responses, and approval reminders followed by mobile approval and Slack summaries. Bridge-owned read-only collaboration and the offline controlled executor are separate capabilities.
+### Development / 开发验证
 
-The original ChatGPT connection attempt was unsuccessful. Direct Slack permission approval remained an uninstalled candidate. Actual reboot recovery and new-machine migration remain untested.
+~~~powershell
+npm.cmd ci
+npm.cmd test
+npm.cmd run test:browser
+npm.cmd run check
+~~~
 
-This public repository contains documentation only. It does not publish bridge runtime source, credentials, authentication data, raw conversations, or a one-click installer. Read historical “not connected” conclusions in chronological context; later original-thread queue tests changed that outcome.
+Browser tests use simulated external services. They do not send tasks to your Slack workspace or Codex chats.
+
+浏览器测试使用外部服务替身，不向你的 Slack 工作区或 Codex 聊天发送任务。

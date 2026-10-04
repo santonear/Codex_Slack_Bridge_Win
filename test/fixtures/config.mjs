@@ -1,0 +1,1 @@
+export const config=()=>({version:1,language:'en',slack:{teamId:'T12345678',channelId:'C12345678',allowedUserIds:['U12345678']},routes:[{alias:'AGENT1',threadId:'11111111-1111-4111-8111-111111111111',title:'Example chat'}],desktop:{},limits:{dailyLimit:3,turnTimeoutMs:1000}});

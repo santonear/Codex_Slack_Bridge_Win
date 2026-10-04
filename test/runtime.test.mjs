@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createRuntime} from '../src/runtime.mjs';import {config} from './fixtures/config.mjs';
+test('runtime refuses incompatible desktop before starting Slack',async()=>{const runtime=createRuntime({store:{readConfig:async()=>({config:config(),secrets:{}})},adapters:{desktop:async()=>({probe:async()=>({login:'pass',queueSchema:'fail'}),close(){}}),slack:async()=>{throw Error('SHOULD_NOT_START');}}});await assert.rejects(runtime.start(),/INCOMPATIBLE/);assert.equal(runtime.status().running,false);});
+test('nonce is armed only while runtime is running',async()=>{const runtime=createRuntime({store:{},adapters:{}});assert.throws(()=>runtime.armTest('AGENT1'),/NOT_RUNNING/);});

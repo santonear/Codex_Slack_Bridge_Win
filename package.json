@@ -1,0 +1,22 @@
+{
+  "name": "codex-slack-bridge-win",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.16"
+  },
+  "scripts": {
+    "start": "node src/main.mjs",
+    "test": "node --test test/*.test.mjs",
+    "test:browser": "playwright test",
+    "check": "node scripts/check.mjs"
+  },
+  "dependencies": {
+    "@slack/bolt": "5.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  },
+  "description": "Less chair time, more life time. This human was made to roam—not to become a desktop accessory."
+}

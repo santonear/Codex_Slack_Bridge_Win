@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {redact} from '../src/redact.mjs';
+test('removes tokens Slack IDs paths and UUIDs from nested reports',()=>{const input={message:'xoxb-123-secret T12345678 C12345678 U12345678 11111111-1111-4111-8111-111111111111',path:'D:/private/place',nested:['hidden-name']};const output=JSON.stringify(redact(input,['hidden-name']));for(const raw of ['xoxb-123-secret','T12345678','D:/private','11111111-1111','hidden-name'])assert.ok(!output.includes(raw));assert.ok(output.includes('REDACTED'));});
