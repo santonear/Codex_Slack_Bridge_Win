@@ -38,7 +38,7 @@ After selecting the actual bot mention, send AGENT1: your task or AGENT1: status
 
 The default shared daily limit is 30 and the tracking timeout is 90 seconds. Query status after a timeout rather than resending. “Refresh result” checks the current wizard test and can deliver a confirmed final answer without enqueueing again.
 
-Keep the browser and launcher running. “Stop Bridge” stops Slack reception while leaving setup available. Closing the launcher ends the service. Launch again to reuse saved settings; old tasks are not replayed.
+After dependency setup, the launcher closes and the service runs in the background. The browser opens the setup wizard. “Stop Bridge” stops Slack reception while leaving setup available. Launch again to reuse saved settings; old tasks are not replayed.
 
 ## Local data
 
